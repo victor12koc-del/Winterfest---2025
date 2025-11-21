@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details | Winter Fest 2025</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <div id="snow-container"></div>
+
+    <nav class="glass-nav">
+        <div class="logo"><a href="index.html" style="text-decoration:none; color:inherit;">Winter Fest '25</a></div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#events">Events</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero" style="min-height: 60vh; padding-top: 120px;">
+        <div class="hero-content">
+            <div id="event-icon-container" style="margin-bottom: 1rem; color: var(--accent-color);">
+                <!-- Icon injected here -->
+            </div>
+            <h1 id="event-title" class="title" style="font-size: 3rem;">Loading...</h1>
+            <p id="event-subtitle" class="subtitle" style="margin-bottom: 2rem;"></p>
+        </div>
+    </section>
+
+    <section class="section" style="padding-top: 0;">
+        <div class="glass-panel" style="max-width: 800px; margin: 0 auto;">
+            <div style="margin-bottom: 3rem;">
+                <h3 style="color: var(--accent-color); margin-bottom: 1rem; font-size: 1.5rem;">Description</h3>
+                <p id="event-description" style="line-height: 1.8; color: #cbd5e1; font-size: 1.1rem;">
+                    <!-- Description injected here -->
+                </p>
+            </div>
+
+            <div style="margin-bottom: 3rem;">
+                <h3 style="color: var(--accent-color); margin-bottom: 1rem; font-size: 1.5rem;">Rules & Guidelines</h3>
+                <ul id="event-rules" class="guidelines-list">
+                    <!-- Rules injected here -->
+                </ul>
+            </div>
+
+            <div id="categories-section" style="margin-bottom: 3rem; display: none;">
+                <h3 style="color: var(--accent-color); margin-bottom: 1rem; font-size: 1.5rem;">Categories</h3>
+                <ul id="event-categories" class="guidelines-list">
+                    <!-- Categories injected here -->
+                </ul>
+            </div>
+
+            <div>
+                <h3 style="color: var(--accent-color); margin-bottom: 1rem; font-size: 1.5rem;">Contact (SPOC)</h3>
+                <div id="event-spoc"
+                    style="display: flex; flex-direction: column; gap: 0.5rem; color: #fff; font-weight: 600;">
+                    <!-- SPOCs injected here -->
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; text-align: center;">
+                <a href="https://forms.gle/4W7gjo2bjZ3DJEd16" target="_blank" class="register-btn">Register for this
+                    Event</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Winter Fest Committee | XIME Kochi</p>
+    </footer>
+
+    <script src="events_data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Snow Effect (Simplified for this page)
+            const snowContainer = document.getElementById('snow-container');
+            for (let i = 0; i < 50; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.classList.add('snowflake');
+                snowflake.innerHTML = '❄';
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+                snowflake.style.opacity = Math.random();
+                snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+                snowContainer.appendChild(snowflake);
+            }
+
+            // Get Event ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const eventId = urlParams.get('id');
+
+            if (eventId && eventsData[eventId]) {
+                const data = eventsData[eventId];
+
+                // Populate Content
+                document.title = `${data.title} | Winter Fest 2025`;
+                document.getElementById('event-title').innerText = data.title;
+                document.getElementById('event-subtitle').innerText = data.subtitle || '';
+                document.getElementById('event-description').innerText = data.description;
+
+                // Icon
+                const iconContainer = document.getElementById('event-icon-container');
+                const iconElement = document.createElement('i');
+                iconElement.setAttribute('data-lucide', data.icon);
+                iconElement.style.width = '64px';
+                iconElement.style.height = '64px';
+                iconContainer.appendChild(iconElement);
+
+                // Rules
+                const rulesList = document.getElementById('event-rules');
+                data.rules.forEach(rule => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i data-lucide="check-circle"></i> ${rule}`;
+                    rulesList.appendChild(li);
+                });
+
+                // Categories (if any)
+                if (data.categories) {
+                    document.getElementById('categories-section').style.display = 'block';
+                    const catList = document.getElementById('event-categories');
+                    data.categories.forEach(cat => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<i data-lucide="tag"></i> ${cat}`;
+                        catList.appendChild(li);
+                    });
+                }
+
+                // SPOC
+                const spocContainer = document.getElementById('event-spoc');
+                data.spoc.forEach(person => {
+                    const p = document.createElement('p');
+                    p.innerText = person;
+                    spocContainer.appendChild(p);
+                });
+
+                // Initialize Icons
+                lucide.createIcons();
+            } else {
+                document.getElementById('event-title').innerText = "Event Not Found";
+                document.getElementById('event-description').innerText = "Please return to the home page.";
+            }
+        });
+    </script>
+</body>
+
+</html>
